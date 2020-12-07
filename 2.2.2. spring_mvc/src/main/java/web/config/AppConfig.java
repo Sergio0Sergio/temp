@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScan(value = "hiber")
+@ComponentScan(basePackages = {"web", "hiber"})
 public class AppConfig {
 
     @Autowired

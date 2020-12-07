@@ -1,5 +1,7 @@
 package hiber.model;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,20 +16,21 @@ public class User {
     @Column(name = "name")
     private String firstName;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "email")
     private String email;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
-
 
 
     public Long getId() {
