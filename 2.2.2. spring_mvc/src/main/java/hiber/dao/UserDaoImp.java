@@ -17,9 +17,7 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public void add(User user) {
-        em.getTransaction().begin();
         em.persist(user);
-        em.getTransaction().commit();
     }
 
     @Override
@@ -37,21 +35,17 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public void deleteUser(User user) {
-        em.getTransaction().begin();
         em.remove(user);
-        em.getTransaction().commit();
     }
 
     @Override
     public void updateUser(User user) {
         User u = em.find(User.class, user.getId());
-        em.getTransaction().begin();
         em.detach(u);
         u.setFirstName(user.getFirstName());
         u.setLastName(user.getLastName());
         u.setEmail(user.getEmail());
         em.merge(u);
-        em.getTransaction().commit();
     }
 }
 
