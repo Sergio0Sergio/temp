@@ -4,7 +4,6 @@ import hiber.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -42,9 +41,8 @@ public class UserDaoImp implements UserDao {
     public void updateUser(User user) {
         User u = em.find(User.class, user.getId());
         em.detach(u);
-        u.setFirstName(user.getFirstName());
-        u.setLastName(user.getLastName());
-        u.setEmail(user.getEmail());
+        u.setLogin(user.getLogin());
+        u.setPassword(user.getPassword());
         em.merge(u);
     }
 }
