@@ -1,5 +1,6 @@
 package web.controller;
 
+import hiber.model.Role;
 import hiber.model.User;
 import hiber.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UserController {
 
 
@@ -18,26 +19,32 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping("/")
+    public String homePage(){
+        return "/index";
+    }
+
+    @GetMapping("/users")
     public String getUsers(ModelMap model) {
         model.addAttribute("users", userService.listUsers());
-        return "users/users";
+        return "/users";
     }
 
     @GetMapping("/{id}")
     public String getUser(@PathVariable("id") long id, Model model) {
         model.addAttribute(userService.getUser(id));
-        return "users/show";
+        return "show";
     }
 
     @GetMapping("/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
-        return "users/new";
+        return "new";
     }
 
-    @PostMapping()
+    @PostMapping("/new")
     public String createUser(@ModelAttribute("user") User user) {
+        user.setRole(2, "ROLE_USER");
         userService.add(user);
         return "redirect:/users";
     }
@@ -45,7 +52,7 @@ public class UserController {
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") long id) {
         model.addAttribute("user", userService.getUser(id));
-        return "users/edit";
+        return "edit";
     }
 
     @PatchMapping("/{id}")

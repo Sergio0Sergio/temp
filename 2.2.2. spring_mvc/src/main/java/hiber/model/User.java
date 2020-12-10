@@ -1,11 +1,11 @@
 package hiber.model;
 
-import com.sun.istack.internal.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,7 +15,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String login;
+    private String username;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -25,8 +25,8 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String login, String password, Set<Role> roles) {
-        this.login = login;
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
         this.password = password;
         this.roles = roles;
     }
@@ -39,12 +39,15 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public void setRole(long id, String name) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(new Role(id, name));
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
@@ -71,7 +74,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override

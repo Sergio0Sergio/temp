@@ -3,17 +3,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit user</title>
+    <title>New User</title>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+
+<form th:method="POST" th:action="@{/new}" th:object="${user}">
     <label for="login">Username</label>
-    <input type="text" th:field="*{login}" id="login">
+    <input type="text" th:field="*{username}" id="login">
     <br/>
     <label for="password">Password</label>
     <input type="text" th:field="*{password}" id="password">
     <br/>
-    <input type="submit" value="Update user info">
+    <input type="submit" value="Create new user">
 </form>
 <br/>
 <a href="/users">Back</a>

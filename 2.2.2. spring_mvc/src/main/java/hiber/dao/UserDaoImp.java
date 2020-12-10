@@ -21,7 +21,8 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public List<User> listUsers() {
-        Query query = em.createQuery("SELECT user FROM User user");
+
+        Query query = em.createQuery("SELECT user FROM User user ");
         List<User> users = (List<User>) query.getResultList();
         return users;
     }
@@ -41,9 +42,11 @@ public class UserDaoImp implements UserDao {
     public void updateUser(User user) {
         User u = em.find(User.class, user.getId());
         em.detach(u);
-        u.setLogin(user.getLogin());
+        u.setUsername(user.getUsername());
         u.setPassword(user.getPassword());
         em.merge(u);
     }
+
+
 }
 
