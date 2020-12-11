@@ -4,12 +4,10 @@ import hiber.dao.UserDao;
 import hiber.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
-
 
     private UserDao userDao;
 
@@ -46,8 +44,4 @@ public class UserServiceImp implements UserService {
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
-
-
-
-
 }

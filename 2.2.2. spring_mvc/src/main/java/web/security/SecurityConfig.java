@@ -1,6 +1,5 @@
 package web.security;
 
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,15 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import web.config.handler.SuccessUserHandler;
 
-
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
     private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
-
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
@@ -36,36 +32,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-
         http
-
                 .formLogin()
-                    .loginPage("/login")
-                    .successHandler(successUserHandler)
-                    .loginProcessingUrl("/loginme")
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .permitAll()
-                    .and().csrf().disable();
-
+                .loginPage("/login")
+                .successHandler(successUserHandler)
+                .loginProcessingUrl("/loginme")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .permitAll()
+                .and().csrf().disable();
         http
-               .logout()
-                    .permitAll()
+                .logout()
+                .permitAll()
                 .logoutSuccessUrl("/login");
         http
                 .authorizeRequests()
                 .antMatchers("/login").anonymous()
-                 .antMatchers("/userspace").access("hasAnyRole('ROLE_USER')")
-                 .antMatchers("/","/users" ).access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated();
-
-
-
+                .antMatchers("/userspace").access("hasAnyRole('ROLE_USER')")
+                .antMatchers("/").access("hasAnyRole('ROLE_ADMIN')").anyRequest().authenticated();
     }
 
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
-
-
 }

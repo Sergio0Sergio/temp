@@ -1,6 +1,5 @@
 package hiber.service;
 
-
 import hiber.dao.UserDao;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

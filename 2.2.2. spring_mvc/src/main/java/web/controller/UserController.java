@@ -1,6 +1,5 @@
 package web.controller;
 
-import hiber.model.Role;
 import hiber.model.User;
 import hiber.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/")
 public class UserController {
-
 
     private final UserService userService;
 
