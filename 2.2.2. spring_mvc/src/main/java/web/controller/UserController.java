@@ -21,13 +21,18 @@ public class UserController {
 
     @GetMapping("/")
     public String homePage(){
-        return "/index";
+        return "/users";
     }
 
     @GetMapping("/users")
     public String getUsers(ModelMap model) {
         model.addAttribute("users", userService.listUsers());
         return "/users";
+    }
+
+    @GetMapping("/login")
+    public String loginPage(ModelMap model) {
+        return "/login";
     }
 
     @GetMapping("/{id}")
@@ -42,17 +47,22 @@ public class UserController {
         return "new";
     }
 
-    @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") User user) {
-        user.setRole(2, "ROLE_USER");
-        userService.add(user);
-        return "redirect:/users";
-    }
-
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") long id) {
         model.addAttribute("user", userService.getUser(id));
         return "edit";
+    }
+
+    @GetMapping("/userspace")
+    public String userspace(){
+        return "/userspace";
+    }
+
+    @PostMapping("/new")
+    public String createUser(@ModelAttribute("user") User user) {
+        user.setRole(2, "USER");
+        userService.add(user);
+        return "redirect:/users";
     }
 
     @PatchMapping("/{id}")

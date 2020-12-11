@@ -3,19 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>User page</title>
 </head>
 <body>
-<div>
-    <a href="/new">Create new user</a>
-    <br>
-    <a href="/users">User list</a>
-    <br>
-
-</div>
-<br/>
 <form th:method="POST" th:action="@{/logout}">
-    <input type="submit" value="Logout">
+        <input type="submit" value="Logout">
 </form>
 </body>
 </html>

@@ -1,11 +1,14 @@
 package hiber.dao;
 
+import hiber.model.Role;
 import hiber.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -45,6 +48,15 @@ public class UserDaoImp implements UserDao {
         u.setUsername(user.getUsername());
         u.setPassword(user.getPassword());
         em.merge(u);
+    }
+
+    @Override
+    public User getUserByName(String name) {
+
+        Query query = em.createQuery("SELECT user FROM User user where user.username = :n")
+                .setParameter("n", name);
+        User user = (User) query.getSingleResult();
+        return user;
     }
 
 

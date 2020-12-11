@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -15,11 +16,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = true)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles = new LinkedHashSet<>();
 
 
     public User() {
@@ -44,6 +51,13 @@ public class User implements UserDetails {
             roles = new HashSet<>();
         }
         roles.add(new Role(id, name));
+    }
+
+    public void setRole(Role role) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
     }
 
     public void setUsername(String username) {
