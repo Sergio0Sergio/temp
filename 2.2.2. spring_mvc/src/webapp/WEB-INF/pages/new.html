@@ -9,18 +9,26 @@
 
 <form th:method="POST" th:action="@{/new}" th:object="${user}">
     <label for="login">Username</label>
-    <input type="text" th:field="*{username}" id="login">
+    <input type="text" th:field="*{username}" id="login"/>
     <br/>
     <label for="password">Password</label>
-    <input type="text" th:field="*{password}" id="password">
+    <input type="text" th:field="*{password}" id="password"/>
     <br/>
+
+<div>
+        <select th:object="${r}" th:field="*{id}" >
+            <option value="0">select role</option>
+            <option th:each="showRole : ${showRoles}"  th:value="${showRole.id}" th:text="${showRole.getName()}"></option>
+        </select>
+</div>
+
     <input type="submit" value="Create new user">
 </form>
 <br/>
 <a href="/users">Back</a>
 <br/>
 <form th:method="POST" th:action="@{/logout}">
-    <input type="submit" value="Logout">
+    <input type="submit" value="Logout"/>
 </form>
 
 </body>

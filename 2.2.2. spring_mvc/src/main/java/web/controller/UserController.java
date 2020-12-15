@@ -1,21 +1,30 @@
 package web.controller;
 
+import hiber.model.Role;
 import hiber.model.User;
+import hiber.service.RoleService;
 import hiber.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class UserController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
+
 
     @GetMapping("/")
     public String homePage(){
@@ -41,7 +50,12 @@ public class UserController {
 
     @GetMapping("/new")
     public String newUser(Model model) {
-        model.addAttribute("user", new User());
+        Role r = new Role();
+        User user = new User();
+        List<Role> showRoles = roleService.listRoles();
+        model.addAttribute("r", r);
+        model.addAttribute("user", user);
+        model.addAttribute("showRoles", showRoles);
         return "new";
     }
 
@@ -57,8 +71,9 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") User user) {
-        user.setRole(2, "USER");
+    public String createUser(@ModelAttribute("user") User user, @ModelAttribute("r") Role role) {
+        Role roleRole = roleService.listRoles().stream().filter(x -> x.getId() == role.getId()).findAny().get();
+        user.setRole(roleRole);
         userService.add(user);
         return "redirect:/users";
     }

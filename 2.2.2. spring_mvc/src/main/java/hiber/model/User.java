@@ -22,10 +22,11 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String password;
 
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new LinkedHashSet<>();
+     private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
