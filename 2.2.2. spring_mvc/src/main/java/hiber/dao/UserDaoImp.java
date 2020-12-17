@@ -16,7 +16,7 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public void add(User user) {
-        em.merge(user);
+        em.persist(user);
     }
 
     @Override
@@ -44,6 +44,7 @@ public class UserDaoImp implements UserDao {
         em.detach(u);
         u.setUsername(user.getUsername());
         u.setPassword(user.getPassword());
+        u.setRoles(user.getRoles());
         em.merge(u);
     }
 

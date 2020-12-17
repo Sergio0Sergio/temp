@@ -5,6 +5,7 @@ import hiber.model.User;
 import hiber.service.RoleService;
 import hiber.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -18,23 +19,25 @@ public class UserController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @GetMapping("/")
-    public String homePage(){
-        return "/users";
+    public String homePage() {
+        return "admin/users";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public String getUsers(ModelMap model) {
         model.addAttribute("users", userService.listUsers());
-        return "/users";
+        return "admin/users";
     }
 
     @GetMapping("/login")
@@ -42,13 +45,13 @@ public class UserController {
         return "/login";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public String getUser(@PathVariable("id") long id, Model model) {
         model.addAttribute(userService.getUser(id));
-        return "show";
+        return "admin/show";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/admin/new")
     public String newUser(Model model) {
         Role r = new Role();
         User user = new User();
@@ -56,36 +59,58 @@ public class UserController {
         model.addAttribute("r", r);
         model.addAttribute("user", user);
         model.addAttribute("showRoles", showRoles);
-        return "new";
+        return "admin/new";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/admin/{id}/edit")
     public String editUser(Model model, @PathVariable("id") long id) {
+        Role r = new Role();
+        model.addAttribute("r", r);
         model.addAttribute("user", userService.getUser(id));
-        return "edit";
+        model.addAttribute("showRoles", roleService.listRoles());
+        return "admin/edit";
     }
 
-    @GetMapping("/userspace")
-    public String userspace(){
-        return "/userspace";
+    @GetMapping("/user/userspace/{id}")
+    public String userspace(Model model, @PathVariable("id") long id) {
+        model.addAttribute("user", userService.getUser(id));
+        return "user/userspace";
     }
 
-    @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") User user, @ModelAttribute("r") Role role) {
+    @GetMapping("/admin/adminspace/{id}")
+    public String adminspace(Model model, @PathVariable("id") long id) {
+        model.addAttribute("user", userService.getUser(id));
+        return "/admin/adminspace";
+    }
+
+    @PostMapping("/admin/new")
+    public String createUser(Model model, @ModelAttribute("user") User user, @ModelAttribute("r") Role role) {
         Role roleRole = roleService.listRoles().stream().filter(x -> x.getId() == role.getId()).findAny().get();
-        user.setRole(roleRole);
-        userService.add(user);
-        return "redirect:/users";
+        User u = new User();
+        u.setUsername(user.getUsername());
+        u.setPassword(passwordEncoder.encode(user.getPassword()));
+        u.setRole(roleRole);
+        userService.add(u);
+        model.addAttribute("users", userService.listUsers());
+        return "admin/users";
     }
 
-    @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
-        return "redirect:/users";
+    @PatchMapping("/admin/users/{id}")
+    public String updateUser(Model model, @ModelAttribute("user") User user, @ModelAttribute("r") Role role, @PathVariable("id") long id) {
+        Role newRole = roleService.listRoles().stream().filter(x -> x.getName().equals(role.getName())).findAny().get();
+        User u = userService.getUser(id);
+        u.setRole(newRole);
+        u.setPassword(passwordEncoder.encode(user.getPassword()));
+        u.setUsername(user.getUsername());
+        userService.updateUser(u);
+        model.addAttribute("users", userService.listUsers());
+        return "admin/users";
     }
-    @DeleteMapping("/{id}/delete")
-    public String deleteUser(@PathVariable("id") long id){
+
+    @DeleteMapping("/admin/{id}/delete")
+    public String deleteUser(Model model, @PathVariable("id") long id) {
         userService.deleteUser(userService.getUser(id));
-        return "redirect:/users";
+        model.addAttribute("users", userService.listUsers());
+        return "admin/users";
     }
 }

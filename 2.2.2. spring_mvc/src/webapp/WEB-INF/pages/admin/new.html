@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/new}" th:object="${user}">
+<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
     <label for="login">Username</label>
     <input type="text" th:field="*{username}" id="login"/>
     <br/>
@@ -25,7 +25,7 @@
     <input type="submit" value="Create new user">
 </form>
 <br/>
-<a href="/users">Back</a>
+<a href="/admin/users">Back</a>
 <br/>
 <form th:method="POST" th:action="@{/logout}">
     <input type="submit" value="Logout"/>
